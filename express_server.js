@@ -44,6 +44,12 @@ app.post(`/urls`, (req, res) => {
   res.redirect(`urls/${random}`);
 });
 
+app.get("/u/:id", (req, res) => {
+  const id = req.params.id;
+  const longURL = urlDatabase[id];
+  res.redirect(longURL);
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
