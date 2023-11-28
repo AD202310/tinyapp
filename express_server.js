@@ -9,10 +9,12 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+
 function generateRandomString() {
   let random = Math.random().toString(36).substr(2, 6);
   return random;
 }
+let random = generateRandomString();
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -36,11 +38,13 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+app.post(`/urls`, (req, res) => {
+  console.log(req.body);
+  urlDatabase[random] = req.body['longURL'];
+  res.redirect(`urls/${random}`);
 });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
