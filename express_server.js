@@ -39,7 +39,6 @@ app.get("/hello", (req, res) => {
 });
 
 app.post(`/urls`, (req, res) => {
-  console.log(req.body);
   urlDatabase[random] = req.body['longURL'];
   res.redirect(`urls/${random}`);
 });
@@ -48,6 +47,12 @@ app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id];
   res.redirect(longURL);
+});
+
+app.post('/urls/:id/delete', (req, res) => {
+  const id = req.params.id;
+  delete urlDatabase[id];
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
