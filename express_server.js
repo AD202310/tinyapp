@@ -126,9 +126,9 @@ app.post("/register", (req, res) => {
       res.status(403);
       return res.send('403 - User already exists');
     }
-    if (email === '') {
+    if (email === '' || password === '') {
       res.status(403);
-      return res.send('403 - Email address is not entered')
+      return res.send('403 - Email address or password is not entered')
     }
   }
   
