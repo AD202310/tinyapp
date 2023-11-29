@@ -51,15 +51,21 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-app.post(`/urls`, (req, res) => {
-  urlDatabase[random] = req.body['longURL'];
-  res.redirect(`urls/${random}`);
-});
-
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id];
   res.redirect(longURL);
+});
+
+app.get("/register", (req, res) => {
+  res.render("urls_register");
+});
+
+
+
+app.post(`/urls`, (req, res) => {
+  urlDatabase[random] = req.body['longURL'];
+  res.redirect(`urls/${random}`);
 });
 
 app.post('/urls/:id/delete', (req, res) => {
@@ -87,6 +93,11 @@ app.post("/logout", (req, res) => {
   res.clearCookie ('username', username);
   res.redirect('/urls');
 });
+
+app.post("/register", (req, res) => {
+  
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
