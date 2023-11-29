@@ -85,6 +85,12 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 });
 
+app.get("/login", (req, res) => {
+  const templateVars = { user: null};
+  res.render("urls_login", templateVars);
+});
+
+
 
 
 app.post(`/urls`, (req, res) => {
