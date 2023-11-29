@@ -12,6 +12,18 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user3RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+}
 
 function generateRandomString() {
   let random = Math.random().toString(36).substr(2, 6);
@@ -19,9 +31,20 @@ function generateRandomString() {
 }
 let random = generateRandomString();
 
+function generateRandomUserID() {
+  let userID = Math.random().toString(36).substr(2, 6);
+  return userID;
+}
+
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
+app.get('/users.json', (req, res) => {
+  res.json(users);
+});
+
 
 app.get("/urls", (req, res) => {
   const templateVars = { 
@@ -58,7 +81,8 @@ app.get("/u/:id", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("urls_register");
+  const templateVars = { username: null};
+  res.render("urls_register", templateVars);
 });
 
 
@@ -95,7 +119,24 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+  const { email, password } = req.body;
+  let user_id = generateRandomUserID();
+  for (let username in users) {
+    if (email === users[username].email) {
+      res.status(403);
+      return res.send('403 - User already exists');
+    }
+  }
   
+  users[user_id] = {
+    id: user_id,
+    email,
+    password
+  }
+
+  res.cookie('user_id', user_id)
+  res.redirect('/urls');
+
 });
 
 
