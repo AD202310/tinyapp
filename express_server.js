@@ -63,7 +63,12 @@ function urlsForUser(id, database) {
   return filteredUrls;
 };
 
+
+
 // ---- DB Testers (delete when finish !!! )
+
+
+
 
 app.get('/users.json', (req, res) => {
   res.json(users);
@@ -88,12 +93,16 @@ app.get("/urls", (req, res) => {
     res.redirect("/login");
     return;
   }
+  let filteredUrls = urlsForUser(req.cookies["user_id"], urlDatabase);
+
   const templateVars = { 
-    urls: urlDatabase,
+    urls: filteredUrls,
     user: req.cookies["user_id"] 
   };
   res.render("urls_index", templateVars);
 });
+
+
 
 app.get("/urls/new", (req, res) => {
   if (req.cookies["user_id"] === undefined) {
