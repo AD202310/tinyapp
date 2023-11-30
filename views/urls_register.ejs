@@ -21,23 +21,22 @@
   <body>
     <%- include('partials/_header') %>
     <main style="margin: 1em;">
-      <h4>Enter your email address and password</h4>
+      <h4>Create Account</h4>
 
       <form class="form-inline" action="/register" method="POST">
         <div class="form-group mb-2">
-          <label for="longURL">Email: </label>
           <input
             class="form-control"
             type="email"
             name="email"
-            placeholder="Your email address"
+            placeholder="Enter email"
             style="width: 300px; margin: 1em"
           />
           <input
             class="form-control"
             type="password"
             name="password"
-            placeholder="Your password"
+            placeholder="Enter password"
             style="width: 300px; margin: 1em"
           />
           <button type="submit" class="btn btn-primary">Enter</button>

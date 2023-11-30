@@ -37,6 +37,7 @@ function generateRandomUserID() {
 }
 
 
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -112,16 +113,42 @@ app.post("/urls/:id", (req, res) => {
   res.redirect('/urls');
 });
 
+function findUserByEmail (email) {
+  for (let user in users) {
+    if (email === users[user].email) {
+      return users[user];
+    }
+  }
+  return null;
+};
+
+
 app.post("/login", (req, res) => {
-  const user = req.body.user;
-  res.cookie('user_id', user);
-  res.redirect('/urls');
+  const { email, password } = req.body;
+  if (email === '' || password === '') {
+    res.status(403);
+    return res.send('403 - Email address or password is not entered')
+  }
+  let result = findUserByEmail(email);
+  if (result === null) {
+    res.status(403)
+    return res.send(`403 - Email address ${email} cannot be found`);
+  }
+  if (password === result.password) {
+    res.cookie('user_ID', result);
+    res.redirect('/urls');
+    return result;
+  }
+  res.status(403);
+  return res.send('403 - Wrong password')
 });
+
+
 
 app.post("/logout", (req, res) => {
   const user = req.body.user;
-  res.clearCookie ('user', user);
-  res.redirect('/urls');
+  res.clearCookie ('user_ID', user);
+  res.redirect('/login');
 });
 
 app.post("/register", (req, res) => {
