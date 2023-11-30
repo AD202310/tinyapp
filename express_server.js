@@ -44,13 +44,13 @@ function generateRandomUserID() {
   return userID;
 };
 
-function findUserByEmail (email) {
-  for (let user in users) {
-    if (email === users[user].email) {
-      return users[user];
+function findUserByEmail (email, database) {
+  for (let user in database) {
+    if (database[user].email === email) {
+      return database[user];
     }
   }
-  return null;
+  return undefined;
 };
 
 function urlsForUser(id, database) {
@@ -184,26 +184,27 @@ app.post("/urls/:id", (req, res) => {
   res.redirect('/urls');
 });
 
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-  if (email === '' || password === '') {
-    res.status(403);
-    return res.send('403 - Email address or password is not entered')
-  }
-  let result = findUserByEmail(email);
-  if (result === null) {
-    res.status(403)
-    return res.send(`403 - Email address ${email} cannot be found`);
-  }
-  if (password === result.password) {
-    res.cookie('user_id', result.id);
-    res.redirect('/urls');
-    return result;
-  }
-  res.status(403);
-  return res.send('403 - Wrong password')
-});
 
+
+// Login
+app.post("/login", (req, res) => {
+  let user = findUserByEmail(req.body.email, users);
+  if (user !== undefined) {
+      if (bcrypt.compareSync(req.body.password, user.password)) {
+        res.cookie('user_id', user.id);
+        return res.redirect('/urls');
+      } else {
+          res.status(403);
+          return res.send('403 - Wrong password');
+        } 
+    } else {
+        res.status(403);
+        return res.send('403 - Email address is not registered')
+    }
+  });
+
+
+// Logout 
 app.post("/logout", (req, res) => {
   const user = req.body.user;
   res.clearCookie ('user_id', user);
