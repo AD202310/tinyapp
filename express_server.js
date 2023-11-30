@@ -8,44 +8,80 @@ app.use(cookieParser());
 
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW",
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW",
+  },
 };
 
 const users = {
-  userRandomID: {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur",
+  aa: {
+    id: "aa",
+    email: "a@a.com",
+    password: "11",
   },
-  user2RandomID: {
-    id: "user3RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk",
+  bb: {
+    id: "bb",
+    email: "b@b.com",
+    password: "22",
   },
 }
+
+// --- functions
+
 
 function generateRandomString() {
   let random = Math.random().toString(36).substr(2, 6);
   return random;
-}
-let random = generateRandomString();
+};
 
 function generateRandomUserID() {
   let userID = Math.random().toString(36).substr(2, 6);
   return userID;
-}
+};
 
+function findUserByEmail (email) {
+  for (let user in users) {
+    if (email === users[user].email) {
+      return users[user];
+    }
+  }
+  return null;
+};
 
+function urlsForUser(id, database) {
+  let filteredUrls = {};
+  for (const shortURL in database) {
+    if (database[shortURL].userID === id) {
+      filteredUrls[shortURL] = database[shortURL];
+    }
+  }
+  return filteredUrls;
+};
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
+// ---- DB Testers (delete when finish !!! )
 
 app.get('/users.json', (req, res) => {
   res.json(users);
 });
 
+app.get('/db.json', (req, res) => {
+  res.json(urlDatabase);
+});
+
+
+
+
+
+// -----GET endpoints ----
+
+app.get("/", (req, res) => {
+  res.send("Hello!");
+});
 
 app.get("/urls", (req, res) => {
   if (req.cookies["user_id"] === undefined) {
@@ -60,6 +96,10 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  if (req.cookies["user_id"] === undefined) {
+    res.redirect("/login");
+    return;
+  }
   const templateVars = { 
     user: req.cookies["user_id"] 
   };
@@ -67,9 +107,11 @@ app.get("/urls/new", (req, res) => {
 })
 
 app.get("/urls/:id", (req, res) => {
+  const id = req.params.id;
+  console.log('urlDatabase' ,urlDatabase)
   const templateVars = { 
     id: req.params.id, 
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[id].longURL,
     user: req.cookies["user_id"]
    };
   res.render("urls_show", templateVars);
@@ -81,25 +123,42 @@ app.get("/hello", (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
-  const longURL = urlDatabase[id];
+  if (id === undefined) {
+    res.status(403);
+    return res.send('403 - URL does not exist')
+  };
+  const longURL = urlDatabase[id].longURL;
   res.redirect(longURL);
 });
 
 app.get("/register", (req, res) => {
+  if (req.cookies["user_id"] !== undefined) {
+    res.redirect("/urls");
+    return;
+  }
   const templateVars = { user: null};
   res.render("urls_register", templateVars);
 });
 
 app.get("/login", (req, res) => {
+  if (req.cookies["user_id"] !== undefined) {
+    res.redirect("/urls");
+    return;
+  }
   const templateVars = { user: null};
   res.render("urls_login", templateVars);
 });
 
 
+// ------- POST endpoints ---------
 
 
 app.post(`/urls`, (req, res) => {
-  urlDatabase[random] = req.body['longURL'];
+  let random = generateRandomString();
+  urlDatabase[random] = { 
+    longURL: req.body.longURL, 
+    userID: req.cookies['user_id']
+  } 
   res.redirect(`urls/${random}`);
 });
 
@@ -112,19 +171,10 @@ app.post('/urls/:id/delete', (req, res) => {
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
-  urlDatabase[id] = longURL;
+  urlDatabase[id].longURL = longURL;
   console.log(urlDatabase)
   res.redirect('/urls');
 });
-
-function findUserByEmail (email) {
-  for (let user in users) {
-    if (email === users[user].email) {
-      return users[user];
-    }
-  }
-  return null;
-};
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
@@ -145,8 +195,6 @@ app.post("/login", (req, res) => {
   res.status(403);
   return res.send('403 - Wrong password')
 });
-
-
 
 app.post("/logout", (req, res) => {
   const user = req.body.user;
