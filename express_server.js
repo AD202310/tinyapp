@@ -48,16 +48,20 @@ app.get('/users.json', (req, res) => {
 
 
 app.get("/urls", (req, res) => {
+  if (req.cookies["user_id"] === undefined) {
+    res.redirect("/login");
+    return;
+  }
   const templateVars = { 
     urls: urlDatabase,
-    user: req.cookies["user"] 
+    user: req.cookies["user_id"] 
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const templateVars = { 
-    user: req.cookies["user"] 
+    user: req.cookies["user_id"] 
   };
   res.render("urls_new", templateVars);
 })
@@ -66,7 +70,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     id: req.params.id, 
     longURL: urlDatabase[req.params.id],
-    user: req.cookies["user"]
+    user: req.cookies["user_id"]
    };
   res.render("urls_show", templateVars);
 });
@@ -122,7 +126,6 @@ function findUserByEmail (email) {
   return null;
 };
 
-
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   if (email === '' || password === '') {
@@ -135,7 +138,7 @@ app.post("/login", (req, res) => {
     return res.send(`403 - Email address ${email} cannot be found`);
   }
   if (password === result.password) {
-    res.cookie('user_ID', result);
+    res.cookie('user_id', result.id);
     res.redirect('/urls');
     return result;
   }
@@ -147,7 +150,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   const user = req.body.user;
-  res.clearCookie ('user_ID', user);
+  res.clearCookie ('user_id', user);
   res.redirect('/login');
 });
 
