@@ -65,7 +65,7 @@ function urlsForUser(id, database) {
 
 
 
-// ---- DB Testers (delete when finish !!! )
+// ----  DB check
 
 
 
@@ -88,6 +88,7 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+// My URLs page
 app.get("/urls", (req, res) => {
   if (req.cookies["user_id"] === undefined) {
     res.redirect("/login");
@@ -97,27 +98,26 @@ app.get("/urls", (req, res) => {
 
   const templateVars = { 
     urls: filteredUrls,
-    user: req.cookies["user_id"] 
+    user: users[req.cookies["user_id"]] 
   };
   res.render("urls_index", templateVars);
 });
 
 
-
+// Create New URL
 app.get("/urls/new", (req, res) => {
-  if (req.cookies["user_id"] === undefined) {
+  if (req.cookies["user_id"]) {
+    let templateVars = {user: users[req.cookies['user_id']]};
+    res.render("urls_new", templateVars);
+  }
     res.redirect("/login");
     return;
-  }
-  const templateVars = { 
-    user: req.cookies["user_id"] 
-  };
-  res.render("urls_new", templateVars);
 })
 
+
+//Short URL
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id;
-  console.log('urlDatabase' ,urlDatabase)
   const templateVars = { 
     id: req.params.id, 
     longURL: urlDatabase[id].longURL,
@@ -126,9 +126,7 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
+
 
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
@@ -161,7 +159,7 @@ app.get("/login", (req, res) => {
 
 // ------- POST endpoints ---------
 
-
+// Create New URL
 app.post(`/urls`, (req, res) => {
   let random = generateRandomString();
   urlDatabase[random] = { 
@@ -170,6 +168,8 @@ app.post(`/urls`, (req, res) => {
   } 
   res.redirect(`urls/${random}`);
 });
+
+
 
 app.post('/urls/:id/delete', (req, res) => {
   const id = req.params.id;
@@ -181,7 +181,6 @@ app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[id].longURL = longURL;
-  console.log(urlDatabase)
   res.redirect('/urls');
 });
 
