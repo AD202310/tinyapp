@@ -17,7 +17,7 @@ const testUsers = {
 
 describe('getUserByEmail', function() {
   it('should return a user with valid email', function() {
-    const user = getUserByEmail("a@a.com", testUsers)
+    const user = getUserByEmail("a@a.com", testUsers);
     const expectedUserID = testUsers.aa;
     assert.equal(user, expectedUserID);
   });
