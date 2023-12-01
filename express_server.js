@@ -16,9 +16,10 @@ app.use(function(req, res, next) {
   next();
 });
 
+const { getUserByEmail } = require('./helpers');
+
+
 // const urlDatabase = {};
-
-
 const urlDatabase = {
   b6UTxQ: {
     longURL: "https://www.tsn.ca",
@@ -31,7 +32,6 @@ const urlDatabase = {
 };
 
 // const users = {};
-
 const users = {
   aa: {
     id: "aa",
@@ -58,14 +58,7 @@ function generateRandomUserID() {
   return userID;
 };
 
-function getUserByEmail (email, database) {
-  for (let user in database) {
-    if (database[user].email === email) {
-      return database[user];
-    }
-  }
-  return undefined;
-};
+
 
 function urlsForUser(id, database) {
   let filteredUrls = {};
