@@ -16,7 +16,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-const { getUserByEmail } = require('./helpers');
+
 
 
 // const urlDatabase = {};
@@ -48,6 +48,8 @@ const users = {
 // --- functions
 
 
+const { getUserByEmail } = require('./helpers');
+
 function generateRandomString() {
   let random = Math.random().toString(36).substr(2, 6);
   return random;
@@ -57,8 +59,6 @@ function generateRandomUserID() {
   let userID = Math.random().toString(36).substr(2, 6);
   return userID;
 };
-
-
 
 function urlsForUser(id, database) {
   let filteredUrls = {};
@@ -75,8 +75,6 @@ function urlsForUser(id, database) {
 // ----  DB check
 
 
-
-
 app.get('/users.json', (req, res) => {
   res.json(users);
 });
@@ -84,8 +82,6 @@ app.get('/users.json', (req, res) => {
 app.get('/db.json', (req, res) => {
   res.json(urlDatabase);
 });
-
-
 
 
 
@@ -134,7 +130,6 @@ app.get("/urls/:id", (req, res) => {
 });
 
 
-
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   if (id === undefined) {
@@ -177,13 +172,14 @@ app.post(`/urls`, (req, res) => {
 });
 
 
-
+// Delete in My URL page
 app.post('/urls/:id/delete', (req, res) => {
   const id = req.params.id;
   delete urlDatabase[id];
   res.redirect("/urls");
 });
 
+// Update in My URL page
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
@@ -213,7 +209,6 @@ app.post("/login", (req, res) => {
 
 // Logout 
 app.post("/logout", (req, res) => {
-  const user = req.body.user;
   res.clearCookie ('session');
   res.clearCookie ('session.sig');
   res.redirect('/login');
