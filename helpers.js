@@ -1,4 +1,4 @@
-function getUserByEmail (email, database) {
+const getUserByEmail = (email, database) => {
   for (let user in database) {
     if (database[user].email === email) {
       return database[user];
@@ -6,4 +6,5 @@ function getUserByEmail (email, database) {
   }
   return undefined;
 };
+
 module.exports = { getUserByEmail };
