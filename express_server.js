@@ -58,7 +58,7 @@ function generateRandomUserID() {
   return userID;
 };
 
-function findUserByEmail (email, database) {
+function getUserByEmail (email, database) {
   for (let user in database) {
     if (database[user].email === email) {
       return database[user];
@@ -202,7 +202,7 @@ app.post("/urls/:id", (req, res) => {
 
 // Login
 app.post("/login", (req, res) => {
-  let user = findUserByEmail(req.body.email, users);
+  let user = getUserByEmail(req.body.email, users);
   if (user !== undefined) {
       if (bcrypt.compareSync(req.body.password, user.password)) {
         req.session.user_id =user.id;
