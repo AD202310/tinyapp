@@ -4,16 +4,19 @@ const app = express();
 // default port 8080
 const PORT = 8080; 
 
-// Import middleware
+// Import third-party middleware
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
 
 
-// Import modules
+// Import mock database
 const { urlDatabase, users } = require('./database/initial_db');
+
+// Import handlers
 const { getUserByEmail } = require('./handlers/getUserByEmail');
 
-
+// Import middleware
+const session_handler = require('./middleware/session_handler');
 
 //View Engine setup
 app.set("view engine", "ejs");
@@ -27,15 +30,10 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+// Use middleware
+app.use(session_handler);
 
 
-
-
-
-app.use(function(req, res, next) {
-  res.locals.user_id = req.session.user_id || false;
-  next();
-});
 
 
 
