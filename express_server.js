@@ -59,11 +59,6 @@ app.get('/', (req, res) => {
 });
 
 
-// -----GET endpoints ----
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 // My URLs page
 app.get("/urls", (req, res) => {
