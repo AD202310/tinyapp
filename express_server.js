@@ -22,6 +22,10 @@ const { urlsForUser } = require('./handlers/urlsForUser');
 // Import middleware
 const session_handler = require('./middleware/session_handler');
 
+// Import routers
+const db_json = require('./development/db_json');
+
+
 //View Engine setup
 app.set("view engine", "ejs");
 
@@ -37,25 +41,14 @@ app.use(cookieSession({
 // Use middleware
 app.use(session_handler);
 
+// Development routers
+app.use('/', db_json);
 
 
 
 
 
 
-
-
-
-
-// ----  DB check
-
-
-app.get('/users.json', (req, res) => {
-  res.json(users);
-});
-app.get('/db.json', (req, res) => {
-  res.json(urlDatabase);
-});
 
 app.get('/', (req, res) => {
   if (req.session.userID) {
