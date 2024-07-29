@@ -12,8 +12,10 @@ const bcrypt = require("bcryptjs");
 // Import mock database
 const { urlDatabase, users } = require('./database/initial_db');
 
+
 // Import handlers
 const { getUserByEmail } = require('./handlers/getUserByEmail');
+const {generateRandomString, generateRandomUserID} = require('./handlers/generateRandom');
 
 // Import middleware
 const session_handler = require('./middleware/session_handler');
@@ -38,20 +40,7 @@ app.use(session_handler);
 
 
 
-// --- functions
 
-
-
-
-function generateRandomString() {
-  let random = Math.random().toString(36).substr(2, 6);
-  return random;
-}
-
-function generateRandomUserID() {
-  let userID = Math.random().toString(36).substr(2, 6);
-  return userID;
-}
 
 function urlsForUser(id, database) {
   let filteredUrls = {};
