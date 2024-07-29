@@ -7,11 +7,11 @@ const PORT = 8080;
 // Import middleware
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
-const { getUserByEmail } = require('./helpers');
+
 
 // Import modules
 const { urlDatabase, users } = require('./database/initial_db');
-
+const { getUserByEmail } = require('./handlers/getUserByEmail');
 
 
 
