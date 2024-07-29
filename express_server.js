@@ -1,15 +1,36 @@
 const express = require("express");
-const cookieSession = require('cookie-session');
 const app = express();
+
+// default port 8080
+const PORT = 8080; 
+
+// Import middleware
+const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
-const PORT = 8080; // default port 8080
+const { getUserByEmail } = require('./helpers');
+
+// Import modules
+const { urlDatabase, users } = require('./database/initial_db');
+
+
+
+
+//View Engine setup
 app.set("view engine", "ejs");
+
+
+// Middleware setup
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
   keys: ['foo', 'bar', 'boo'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
+
+
+
+
+
 
 app.use(function(req, res, next) {
   res.locals.user_id = req.session.user_id || false;
@@ -19,36 +40,10 @@ app.use(function(req, res, next) {
 
 
 
-// const urlDatabase = {};
-const urlDatabase = {
-  b6UTxQ: {
-    longURL: "https://www.tsn.ca",
-    userID: "aJ48lW",
-  },
-  i3BoGr: {
-    longURL: "https://www.google.ca",
-    userID: "aJ48lW",
-  },
-};
-
-// const users = {};
-const users = {
-  aa: {
-    id: "aa",
-    email: "a@a.com",
-    password: "11",
-  },
-  bb: {
-    id: "bb",
-    email: "b@b.com",
-    password: "22",
-  },
-};
-
 // --- functions
 
 
-const { getUserByEmail } = require('./helpers');
+
 
 function generateRandomString() {
   let random = Math.random().toString(36).substr(2, 6);
@@ -77,6 +72,9 @@ function urlsForUser(id, database) {
 
 app.get('/users.json', (req, res) => {
   res.json(users);
+});
+app.get('/db.json', (req, res) => {
+  res.json(urlDatabase);
 });
 
 app.get('/', (req, res) => {
