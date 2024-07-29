@@ -16,6 +16,8 @@ const { urlDatabase, users } = require('./database/initial_db');
 // Import handlers
 const { getUserByEmail } = require('./handlers/getUserByEmail');
 const {generateRandomString, generateRandomUserID} = require('./handlers/generateRandom');
+const { urlsForUser } = require('./handlers/urlsForUser');
+
 
 // Import middleware
 const session_handler = require('./middleware/session_handler');
@@ -42,15 +44,6 @@ app.use(session_handler);
 
 
 
-function urlsForUser(id, database) {
-  let filteredUrls = {};
-  for (const shortURL in database) {
-    if (database[shortURL].userID === id) {
-      filteredUrls[shortURL] = database[shortURL];
-    }
-  }
-  return filteredUrls;
-}
 
 
 
