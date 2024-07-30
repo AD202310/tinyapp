@@ -24,7 +24,8 @@ const session_handler = require('./middleware/session_handler');
 
 // Import routers
 const db_json = require('./development/db_json');
-
+const homepage = require('./routers/homepage')
+const urls_routes = require('./routers/urls_routes')
 
 //View Engine setup
 app.set("view engine", "ejs");
@@ -44,36 +45,13 @@ app.use(session_handler);
 // Development routers
 app.use('/', db_json);
 
+//Routes
+app.use('/', homepage);
+app.use('/', urls_routes);
 
 
 
 
-
-
-app.get('/', (req, res) => {
-  if (req.session.userID) {
-    res.redirect('/urls');
-  } else {
-    res.redirect('/login');
-  }
-});
-
-
-
-// My URLs page
-app.get("/urls", (req, res) => {
-  if (req.session.user_id === undefined) {
-    res.redirect("/login");
-    return;
-  }
-  let filteredUrls = urlsForUser(req.session.user_id, urlDatabase);
-
-  const templateVars = {
-    urls: filteredUrls,
-    user: users[req.session.user_id]
-  };
-  res.render("urls_index", templateVars);
-});
 
 
 // Create New URL
