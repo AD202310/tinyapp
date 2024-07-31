@@ -24,8 +24,12 @@ const session_handler = require('./middleware/session_handler');
 
 // Import routers
 const db_json = require('./development/db_json');
-const homepage = require('./routers/homepage')
-const urls_routes = require('./routers/urls_routes')
+const homepage = require('./routers/homepage');
+const urls_routes = require('./routers/urls_routes');
+const register_routes = require('./routers/register_routes');
+const login_routes = require('./routers/login_routes');
+
+
 
 //View Engine setup
 app.set("view engine", "ejs");
@@ -48,8 +52,8 @@ app.use('/', db_json);
 //Routes
 app.use('/', homepage);
 app.use('/', urls_routes);
-
-
+app.use('/', register_routes);
+app.use('/', login_routes);
 
 
 
@@ -87,23 +91,8 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
-app.get("/register", (req, res) => {
-  if (req.session.user_id !== undefined) {
-    res.redirect("/urls");
-    return;
-  }
-  const templateVars = { user: null};
-  res.render("urls_register", templateVars);
-});
 
-app.get("/login", (req, res) => {
-  if (req.session.user_id !== undefined) {
-    res.redirect("/urls");
-    return;
-  }
-  const templateVars = { user: null};
-  res.render("urls_login", templateVars);
-});
+
 
 
 // ------- POST endpoints ---------
@@ -136,54 +125,12 @@ app.post("/urls/:id", (req, res) => {
 
 
 
-// Login
-app.post("/login", (req, res) => {
-  let user = getUserByEmail(req.body.email, users);
-  if (user !== undefined) {
-    if (bcrypt.compareSync(req.body.password, user.password)) {
-      req.session.user_id = user.id;
-      return res.redirect('/urls');
-    } else {
-      res.status(403);
-      return res.send('403 - Wrong password');
-    }
-  } else {
-    res.status(403);
-    return res.send('403 - Email address is not registered');
-  }
-});
 
 
-// Logout
-app.post("/logout", (req, res) => {
-  res.clearCookie('session');
-  res.clearCookie('session.sig');
-  res.redirect('/login');
-});
 
 
-// Registration page
-app.post("/register", (req, res) => {
-  const { email, password } = req.body;
-  let user_id = generateRandomUserID();
-  for (let user in users) {
-    if (email === users[user].email) {
-      res.status(403);
-      return res.send('403 - User already exists');
-    }
-    if (email === '' || password === '') {
-      res.status(403);
-      return res.send('403 - Email address or password is not entered');
-    }
-  }
-  users[user_id] = {
-    id: user_id,
-    email,
-    password: bcrypt.hashSync(req.body.password, 10)
-  };
-  req.session.user_id = user_id;
-  res.redirect('/urls');
-});
+
+
 
 
 app.listen(PORT, () => {
