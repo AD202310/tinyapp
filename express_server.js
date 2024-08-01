@@ -28,7 +28,7 @@ const homepage = require('./routers/homepage');
 const urls_routes = require('./routers/urls_routes');
 const register_routes = require('./routers/register_routes');
 const login_routes = require('./routers/login_routes');
-
+const long_urls_routes = require('./routers/long-urls_route');
 
 
 //View Engine setup
@@ -54,42 +54,7 @@ app.use('/', homepage);
 app.use('/', urls_routes);
 app.use('/', register_routes);
 app.use('/', login_routes);
-
-
-
-
-// Create New URL
-app.get("/urls/new", (req, res) => {
-  if (req.session.user_id) {
-    let templateVars = {user: users[req.session.user_id]};
-    res.render("urls_new", templateVars);
-  }
-  res.redirect("/login");
-  return;
-});
-
-
-//Short URL
-app.get("/urls/:id", (req, res) => {
-  const id = req.params.id;
-  const templateVars = {
-    id: req.params.id,
-    longURL: urlDatabase[id].longURL,
-    user: req.session.user_id
-  };
-  res.render("urls_show", templateVars);
-});
-
-
-app.get("/u/:id", (req, res) => {
-  const id = req.params.id;
-  if (id === undefined) {
-    res.status(403);
-    return res.send('403 - URL does not exist');
-  }
-  const longURL = urlDatabase[id].longURL;
-  res.redirect(longURL);
-});
+app.use('/', long_urls_routes);
 
 
 
