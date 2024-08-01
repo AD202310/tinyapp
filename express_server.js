@@ -15,7 +15,6 @@ const { urlDatabase, users } = require('./database/initial_db');
 
 // Import handlers
 const { getUserByEmail } = require('./handlers/getUserByEmail');
-const {generateRandomString, generateRandomUserID} = require('./handlers/generateRandom');
 const { urlsForUser } = require('./handlers/urlsForUser');
 
 
@@ -56,48 +55,7 @@ app.use('/', register_routes);
 app.use('/', login_routes);
 app.use('/', long_urls_routes);
 
-
-
-
-
-// ------- POST endpoints ---------
-
-// Create New URL
-app.post(`/urls`, (req, res) => {
-  let random = generateRandomString();
-  urlDatabase[random] = {
-    longURL: req.body.longURL,
-    userID: req.session.user_id
-  };
-  res.redirect(`urls/${random}`);
-});
-
-
-// Delete in My URL page
-app.post('/urls/:id/delete', (req, res) => {
-  const id = req.params.id;
-  delete urlDatabase[id];
-  res.redirect("/urls");
-});
-
-// Update in My URL page
-app.post("/urls/:id", (req, res) => {
-  const id = req.params.id;
-  const longURL = req.body.longURL;
-  urlDatabase[id].longURL = longURL;
-  res.redirect('/urls');
-});
-
-
-
-
-
-
-
-
-
-
-
+//Start server
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });

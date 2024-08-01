@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { urlDatabase, users } = require('../database/initial_db');
 const urlsForUser = require('../handlers/urlsForUser')
-
+const { generateRandomString } = require('../handlers/generateRandom');
 
 // Check session, filter urls related to the user
 router.get("/urls", (req, res) => {
@@ -44,7 +44,32 @@ router.get("/urls/:id", (req, res) => {
 });
 
 
+// Create New URL
+router.post(`/urls`, (req, res) => {
+  let random = generateRandomString();
+  urlDatabase[random] = {
+    longURL: req.body.longURL,
+    userID: req.session.user_id
+  };
+  res.redirect(`urls/${random}`);
+});
 
+
+// Delete in My URL page
+router.post('/urls/:id/delete', (req, res) => {
+  const id = req.params.id;
+  delete urlDatabase[id];
+  res.redirect("/urls");
+});
+
+
+// Update in My URL page
+router.post("/urls/:id", (req, res) => {
+  const id = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[id].longURL = longURL;
+  res.redirect('/urls');
+});
 
 
 module.exports = router;
