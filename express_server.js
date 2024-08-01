@@ -6,17 +6,6 @@ const PORT = 8080;
 
 // Import third-party middleware
 const cookieSession = require('cookie-session');
-const bcrypt = require("bcryptjs");
-
-
-// Import mock database
-const { urlDatabase, users } = require('./database/initial_db');
-
-
-// Import handlers
-const { getUserByEmail } = require('./handlers/getUserByEmail');
-const { urlsForUser } = require('./handlers/urlsForUser');
-
 
 // Import middleware
 const session_handler = require('./middleware/session_handler');
@@ -29,10 +18,8 @@ const register_routes = require('./routers/register_routes');
 const login_routes = require('./routers/login_routes');
 const long_urls_routes = require('./routers/long-urls_route');
 
-
 //View Engine setup
 app.set("view engine", "ejs");
-
 
 // Middleware setup
 app.use(express.urlencoded({ extended: true }));
