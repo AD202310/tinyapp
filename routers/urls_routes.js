@@ -35,8 +35,13 @@ router.get("/urls/new", (req, res) => {
 // Create New URL
 router.post("/urls", (req, res) => {
   let random = generateRandomString();
+  let longURL = req.body.longURL;
+  if (longURL.slice(0,7) !== 'http://') {
+    longURL = 'http://' + longURL;
+    console.log(longURL);
+  };
   urlDatabase[random] = {
-    longURL: req.body.longURL,
+    longURL: longURL,
     userID: req.session.user_id
   };
   res.redirect(`urls/${random}`);
