@@ -14,4 +14,4 @@ router.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
-module.exports = router;    
+module.exports = router;

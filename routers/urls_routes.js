@@ -5,6 +5,7 @@ const { urlDatabase, users } = require('../database/initial_db');
 const urlsForUser = require('../handlers/urlsForUser')
 const { generateRandomString } = require('../handlers/generateRandom');
 
+
 // Check session, filter urls related to the user
 router.get("/urls", (req, res) => {
   if (req.session.user_id === undefined) {
@@ -12,7 +13,6 @@ router.get("/urls", (req, res) => {
     return;
   }
   let filteredUrls = urlsForUser.urlsForUser(req.session.user_id, urlDatabase);
-
   const templateVars = {
     urls: filteredUrls,
     user: users[req.session.user_id]
@@ -21,7 +21,7 @@ router.get("/urls", (req, res) => {
 });
 
 
-// Create New URL
+// Create New URL - check session
 router.get("/urls/new", (req, res) => {
   if (req.session.user_id) {
     let templateVars = {user: users[req.session.user_id]};
@@ -32,7 +32,18 @@ router.get("/urls/new", (req, res) => {
 });
 
 
-//Short URL
+// Create New URL
+router.post("/urls", (req, res) => {
+  let random = generateRandomString();
+  urlDatabase[random] = {
+    longURL: req.body.longURL,
+    userID: req.session.user_id
+  };
+  res.redirect(`urls/${random}`);
+});
+
+
+//Show short URL details
 router.get("/urls/:id", (req, res) => {
   const id = req.params.id;
   const templateVars = {
@@ -41,17 +52,6 @@ router.get("/urls/:id", (req, res) => {
     user: req.session.user_id
   };
   res.render("urls_show", templateVars);
-});
-
-
-// Create New URL
-router.post(`/urls`, (req, res) => {
-  let random = generateRandomString();
-  urlDatabase[random] = {
-    longURL: req.body.longURL,
-    userID: req.session.user_id
-  };
-  res.redirect(`urls/${random}`);
 });
 
 
