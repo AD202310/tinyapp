@@ -2,13 +2,13 @@
 
 // initial URL database
 const urlDatabase = {
-  b6UTxQ: {
+  'aJ48lW': {
     longURL: "https://www.tsn.ca",
-    userID: "aJ48lW",
+    userID: "b6UTxQ",
   },
-  i3BoGr: {
+  'i3BoGr': {
     longURL: "https://www.google.ca",
-    userID: "aJ48lW",
+    userID: "b6UTxQ",
   },
 };
 

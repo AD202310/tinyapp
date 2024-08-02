@@ -3,7 +3,7 @@ const router = express.Router();
 
 const bcrypt = require("bcryptjs");
 const getUserByEmail = require('../handlers/getUserByEmail');
-const users = require('../database/initial_db');
+const { users } = require('../database/initial_db');
 
 router.get("/login", (req, res) => {
   if (req.session.user_id) {

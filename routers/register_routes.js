@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const random = require('../handlers/generateRandom');
-const users = require('../database/initial_db');
+const { users } = require('../database/initial_db');
 
 const bcrypt = require("bcryptjs");
 
@@ -11,6 +11,7 @@ router.get("/register", (req, res) => {
   if (req.session.user_id) {
     res.redirect("/urls");
   }
+  
   const templateVars = { user: null};
   res.render("urls_register", templateVars);
 });
@@ -18,8 +19,13 @@ router.get("/register", (req, res) => {
 
 router.post("/register", (req, res) => {
   const { email, password } = req.body;
+  
   let user_id = random.generateRandomUserID();
-  for (let user in users) {
+  
+
+
+  for (let user in users) { 
+
     if (email === users[user].email) {
       res.status(403);
       return res.send('403 - User already exists');
@@ -39,9 +45,6 @@ router.post("/register", (req, res) => {
   req.session.user_id = user_id;
   res.redirect('/urls');
 });
-
-
-
 
 
 module.exports = router;
