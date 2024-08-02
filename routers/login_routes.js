@@ -30,4 +30,10 @@ router.post("/login", (req, res) => {
   }
 });
 
+router.post("/logout", (req, res) => {
+  res.clearCookie('session');
+  res.clearCookie('session.sig');
+  res.redirect('/login');
+});
+
 module.exports = router;
