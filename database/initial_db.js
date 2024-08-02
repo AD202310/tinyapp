@@ -14,13 +14,13 @@ const urlDatabase = {
 
 // initial users database
 const users = {
-  aa: {
-    id: "aa",
+  b6UTxQ: {
+    id: "b6UTxQ",
     email: "a@a.com",
     password: "11",
   },
-  bb: {
-    id: "bb",
+  i3BoGr: {
+    id: "i3BoGr",
     email: "b@b.com",
     password: "22",
   },

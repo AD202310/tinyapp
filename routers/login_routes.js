@@ -6,9 +6,8 @@ const getUserByEmail = require('../handlers/getUserByEmail');
 const users = require('../database/initial_db');
 
 router.get("/login", (req, res) => {
-  if (req.session.user_id !== undefined) {
+  if (req.session.user_id) {
     res.redirect("/urls");
-    return;
   }
   const templateVars = { user: null};
   res.render("urls_login", templateVars);

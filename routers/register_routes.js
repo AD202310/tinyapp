@@ -8,9 +8,8 @@ const bcrypt = require("bcryptjs");
 
 
 router.get("/register", (req, res) => {
-  if (req.session.user_id !== undefined) {
+  if (req.session.user_id) {
     res.redirect("/urls");
-    return;
   }
   const templateVars = { user: null};
   res.render("urls_register", templateVars);
@@ -30,11 +29,13 @@ router.post("/register", (req, res) => {
       return res.send('403 - Email address or password is not entered');
     }
   }
+  
   users[user_id] = {
     id: user_id,
-    email,
+    email: email,
     password: bcrypt.hashSync(req.body.password, 10)
   };
+
   req.session.user_id = user_id;
   res.redirect('/urls');
 });
