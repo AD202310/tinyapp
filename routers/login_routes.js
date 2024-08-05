@@ -21,13 +21,11 @@ router.post("/login", (req, res) => {
       req.session.user_id = user.id;
       return res.redirect('/urls');
     } else {
-      res.status(403);
-      return res.send('403 - Wrong password');
+      res.send('<script>alert("Wrong password"); window.location.href = "/"; </script>');
     }
   } else {
-    res.status(403);
-    return res.send('403 - Email address is not registered');
-  }
+    res.send('<script>alert("Email address is not registered"); window.location.href = "/"; </script>');
+  };
 });
 
 router.post("/logout", (req, res) => {

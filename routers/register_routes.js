@@ -28,11 +28,11 @@ router.post("/register", (req, res) => {
 
     if (email === users[user].email) {
       res.status(403);
-      return res.send('403 - User already exists');
+      return res.send('<script>alert("User already exists"); window.location.href = "/"; </script>');
     }
     if (email === '' || password === '') {
       res.status(403);
-      return res.send('403 - Email address or password is not entered');
+      return res.send('<script>alert("Email address or password is not entered"); window.location.href = "/"; </script>');
     }
   }
   
