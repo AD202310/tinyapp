@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 
-const { getUserByEmail } = require('../helpers.js');
+const getUserByEmail = require('../handlers/getUserByEmail');
 
 const testUsers = {
   aa: {
@@ -15,15 +15,17 @@ const testUsers = {
   },
 };
 
-describe('getUserByEmail', function() {
+describe('Get user by email handler function', function() {
   it('should return a user with valid email', function() {
     const user = getUserByEmail("a@a.com", testUsers);
     const expectedUserID = testUsers.aa;
     assert.equal(user, expectedUserID);
   });
-});
 
-it('Return undefined if non-existent email', () => {
-  const user = getUserByEmail('nonexistent@example.com', testUsers);
-  assert.equal(user, undefined);
+
+  it('Return undefined if non-existent email', () => {
+    const user = getUserByEmail('nonexistent@example.com', testUsers);
+    assert.equal(user, undefined);
+  });
+
 });
