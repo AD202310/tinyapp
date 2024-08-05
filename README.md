@@ -14,8 +14,11 @@ This project was completed as part of a bootcamp learning process, designed to a
 - Node.js
 - Express
 - EJS
+
+### Middleware
 - bcryptjs
 - cookie-session
+- mocha/chai
 
 ## Getting Started
 
@@ -24,10 +27,8 @@ This project was completed as part of a bootcamp learning process, designed to a
 
 ## Functionality
 
-- Short URL Creation: Converts long URLs (e.g. http://www.google.com) into short, encrypted URL IDs (e.g. 4spqk1)
-- Interface: Provides a user-friendly interface for managing existing shortened URLs, including viewing, updating, and deleting them (CRUD)
-
-- User Authentication: Allows users to securely log in using their credentials (e.g. email and password)
-- Session Management: Maintains user sessions, ensuring that users remain logged in across multiple pages
+- User Authorization (registration, login, session management);
+- Create short URL from long URL provided by the user;
+- Read, Update and Delete short URLs;  
 
 
